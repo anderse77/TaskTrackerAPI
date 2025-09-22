@@ -17,9 +17,9 @@ jobs:
               with:
                 dotnet-version: '9.0.x'
 
-            - run: dotnet restore TaskTracker.Api/TaskTracker.Api.csproj
-            - run: dotnet build TaskTracker.Api/TaskTracker.Api.csproj -c Release --no-restore
-            - run: dotnet publish TaskTracker.Api/TaskTracker.Api.csproj -c Release -o publish --no-build
+            - run: dotnet restore src/TaskTracker.Api/TaskTracker.Api.csproj
+            - run: dotnet build src/TaskTracker.Api/TaskTracker.Api.csproj -c Release --no-restore
+            - run: dotnet publish src/TaskTracker.Api/TaskTracker.Api.csproj -c Release -o publish --no-build
 
             - name: Login to Azure
               uses: azure/login@v1
