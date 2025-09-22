@@ -1,0 +1,33 @@
+name: build-and-deploy
+
+on:
+    push:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: ./
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-dotnet@v4
+              with:
+                dotnet-version: '9.0.x'
+
+            - run: dotnet restore TaskTracker.Api/TaskTracker.Api.csproj
+            - run: dotnet build TaskTracker.Api/TaskTracker.Api.csproj -c Release --no-restore
+            - run: dotnet publish TaskTracker.Api/TaskTracker.Api.csproj -c Release -o publish --no-build
+
+            - name: Login to Azure
+              uses: azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+            - name: Deploy to Azure WebApp
+              uses: azure/webapps-deploy@v2
+              with:
+                app-name: web-tasktracker-16604
+                package: publish
